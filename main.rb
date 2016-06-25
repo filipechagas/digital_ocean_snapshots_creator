@@ -3,9 +3,10 @@ $:.unshift File.join(File.dirname(__FILE__))
 require 'rubygems'
 require 'bundler/setup'
 require 'dotenv'
+require 'awesome_print'
 
-require 'lib/ip_retriever'
+require 'lib/snapshots_monitor'
 
 Dotenv.load
 
-puts IpRetriever.new.ip_list.size
+ap SnapshotsMonitor.new.perform.count
