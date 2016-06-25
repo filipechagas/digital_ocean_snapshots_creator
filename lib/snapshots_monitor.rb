@@ -14,7 +14,7 @@ class SnapshotsMonitor
     tag_active_droplets_with_active_droplet_tag
     response = trigger_power_off_for_all_tagged_droplets
     wait_until_all_droplets_are_powered_off(response)
-    ap trigger_snapshots_for_all_droplets
+    trigger_snapshots_for_all_droplets
     untag_all_droplets
 
     puts 'COMPLETED'
@@ -22,6 +22,7 @@ class SnapshotsMonitor
 
   private
   def untag_all_droplets
+    ap 'untag_all_droplets'
     droplets_ids = droplets.map{|droplet| droplet['id'] }
     @digital_ocean_caller.
       untag_droplets(droplets_ids, SNAPSHOT_BACKUP_TAG)
@@ -32,10 +33,12 @@ class SnapshotsMonitor
   end
 
   def trigger_snapshots_for_all_droplets
+    ap 'trigger_snapshots_for_all_droplets'
     @digital_ocean_caller.snapshot_by_tag( SNAPSHOT_BACKUP_TAG )
   end
 
   def wait_until_all_droplets_are_powered_off(response)
+    ap 'wait_until_all_droplets_are_powered_off'
     actions = response.fetch('actions', [])
 
     begin
@@ -44,16 +47,19 @@ class SnapshotsMonitor
   end
 
   def trigger_power_off_for_all_tagged_droplets
+    ap 'trigger_power_off_for_all_tagged_droplets'
     @digital_ocean_caller.power_off_by_tag( ACTIVE_DROPLET_TAG )
   end
 
   def tag_all_droplets_with_snapshot_backup_tag
+    ap 'tag_all_droplets_with_snapshot_backup_tag'
     droplets_ids = droplets.map{|droplet| droplet['id'] }
     @digital_ocean_caller.
       tag_droplets(droplets_ids, SNAPSHOT_BACKUP_TAG)
   end
 
   def tag_active_droplets_with_active_droplet_tag
+    ap 'tag_active_droplets_with_active_droplet_tag'
     droplets_ids = droplets.
       select{|droplet| droplet['status'] == 'active'}.
       map{|droplet| droplet['id'] }
@@ -63,12 +69,14 @@ class SnapshotsMonitor
   end
 
   def droplets
+    ap 'droplets'
     @droplets ||= reload_droplets.select do |droplet|
       [15110818, 18077997].include? droplet['id']
     end
   end
 
   def reload_droplets
+    ap 'reload_droplets'
     @droplets ||= @digital_ocean_caller.all_droplets
   end
 
