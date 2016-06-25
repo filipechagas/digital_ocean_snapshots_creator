@@ -5,6 +5,7 @@ require 'bundler/setup'
 require 'dotenv'
 require 'awesome_print'
 
+require 'lib/custom_logger'
 require 'lib/snapshots_monitor'
 
 Dotenv.load
