@@ -71,9 +71,7 @@ class SnapshotsMonitor
   end
 
   def droplets
-    @droplets ||= reload_droplets.select do |droplet|
-      [18077997].include? droplet['id']
-    end
+    @droplets ||= reload_droplets
   end
 
   def reload_droplets
