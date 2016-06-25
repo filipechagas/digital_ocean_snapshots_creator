@@ -9,4 +9,4 @@ require 'lib/snapshots_monitor'
 
 Dotenv.load
 
-ap SnapshotsMonitor.new.perform.count
+SnapshotsMonitor.new.perform
