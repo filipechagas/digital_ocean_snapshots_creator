@@ -14,6 +14,19 @@ class DigitalOceanCaller
     post(url, params)
   end
 
+  def droplet_details(droplet_id)
+    url = BASE_URL + "droplets/#{ droplet_id }"
+    get(url, {})['droplet']
+  end
+
+  def power_droplet_on(droplet_id)
+    power_droplet_on_or_off(droplet_id, 'on')
+  end
+
+  def power_droplet_off(droplet_id)
+    power_droplet_on_or_off(droplet_id, 'off')
+  end
+
   def power_on_by_tag(tag_name)
     power_on_or_off_by_tag(tag_name, 'on')
   end
@@ -42,6 +55,12 @@ class DigitalOceanCaller
   end
 
   private
+  def power_droplet_on_or_off(droplet_id, on_or_off)
+    url = BASE_URL + "droplets/#{ droplet_id }/actions"
+    params = {'type' => "power_#{ on_or_off }"}
+    post(url, params)
+  end
+
   def power_on_or_off_by_tag(tag_name, on_or_off)
     url = BASE_URL + "droplets/actions?tag_name=#{ tag_name }"
     params = {'type' => "power_#{ on_or_off }"}
