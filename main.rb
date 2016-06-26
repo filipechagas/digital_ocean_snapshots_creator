@@ -11,4 +11,4 @@ require 'lib/snapshots_monitor'
 
 Dotenv.load
 
-SnapshotsMonitor.new(DigitalOceanCaller.new, CustomLogger).perform
+SnapshotsMonitor.new(DigitalOceanCaller.new, CustomLogger.log).perform

@@ -22,7 +22,7 @@ class SnapshotsMonitor
 
   private
   def untag_all_droplets
-    @logger.log.info 'untag_all_droplets'
+    @logger.info 'untag_all_droplets'
     droplets_ids = droplets.map{|droplet| droplet['id'] }
     @digital_ocean_caller.
       untag_droplets(droplets_ids, SNAPSHOT_BACKUP_TAG)
@@ -31,13 +31,13 @@ class SnapshotsMonitor
   end
 
   def trigger_snapshots_for_all_droplets
-    @logger.log.info 'trigger_snapshots_for_all_droplets'
+    @logger.info 'trigger_snapshots_for_all_droplets'
 
     @digital_ocean_caller.snapshot_by_tag( SNAPSHOT_BACKUP_TAG )
   end
 
   def wait_until_all_droplets_are_powered_off(response)
-    @logger.log.info 'wait_until_all_droplets_are_powered_off'
+    @logger.info 'wait_until_all_droplets_are_powered_off'
     actions = response.fetch('actions', [])
 
     begin
@@ -46,12 +46,12 @@ class SnapshotsMonitor
   end
 
   def trigger_power_off_for_all_tagged_droplets
-    @logger.log.info 'trigger_power_off_for_all_tagged_droplets'
+    @logger.info 'trigger_power_off_for_all_tagged_droplets'
     @digital_ocean_caller.power_off_by_tag( ACTIVE_DROPLET_TAG )
   end
 
   def tag_all_droplets_with_snapshot_backup_tag
-    @logger.log.info 'tag_all_droplets_with_snapshot_backup_tag'
+    @logger.info 'tag_all_droplets_with_snapshot_backup_tag'
 
     droplets_ids = droplets.map{|droplet| droplet['id'] }
     @digital_ocean_caller.
@@ -59,7 +59,7 @@ class SnapshotsMonitor
   end
 
   def tag_active_droplets_with_active_droplet_tag
-    @logger.log.info 'tag_active_droplets_with_active_droplet_tag'
+    @logger.info 'tag_active_droplets_with_active_droplet_tag'
 
     droplets_ids = droplets.
       select{|droplet| droplet['status'] == 'active'}.
@@ -74,13 +74,13 @@ class SnapshotsMonitor
   end
 
   def reload_droplets
-    @logger.log.info 'reload_droplets'
+    @logger.info 'reload_droplets'
 
     @droplets ||= @digital_ocean_caller.all_droplets
   end
 
   def all_actions_finished?(actions)
-    @logger.log.info 'all_actions_finished?'
+    @logger.info 'all_actions_finished?'
 
     actions_details = []
     actions.each do |action|
