@@ -5,6 +5,10 @@ require 'json'
 class DigitalOceanCaller
   BASE_URL  = "https://api.digitalocean.com/v2/"
 
+  def initialize(logger)
+    @logger = logger
+  end
+
   def snapshot_by_tag(tag_name)
     url = BASE_URL + "droplets/actions?tag_name=#{ tag_name }"
     params = {
@@ -79,25 +83,25 @@ class DigitalOceanCaller
   end
 
   def post(url, params)
-    CustomLogger.log.info 'post'
+    @logger.info 'post'
 
     http_request(url, params, 'Post')
   end
 
   def delete(url, params)
-    CustomLogger.log.info 'delete'
+    @logger.info 'delete'
 
     http_request(url, params, 'Delete')
   end
 
   def get(url, params)
-    CustomLogger.log.info 'get'
+    @logger.info 'get'
 
     http_request(url, params, 'Get')
   end
 
   def http_request(url, params, verb)
-    CustomLogger.log.debug "http_request url: #{ url } params: #{ params.inspect }" +
+    @logger.debug "http_request url: #{ url } params: #{ params.inspect }" +
       " verb: #{ verb } "
 
     uri = URI.parse(url)
@@ -113,7 +117,7 @@ class DigitalOceanCaller
       http.request(request)
     end
 
-    CustomLogger.log.debug "Response code: #{ response.code.to_s } - body: #{ response.body.to_s }"
+    @logger.debug "Response code: #{ response.code.to_s } - body: #{ response.body.to_s }"
 
     unless response.code.to_s =~ /\A4../
       JSON.parse(response.body || '{}')
