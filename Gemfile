@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
 gem "json"
-gem "dotenv", group: :development
-gem "awesome_print", group: :development
+
+group :development do
+  gem "dotenv"
+  gem "awesome_print"
+  gem "webmock"
+end
