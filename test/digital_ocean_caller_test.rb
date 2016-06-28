@@ -1,10 +1,9 @@
 require_relative './test_helper'
-
-class Logger; def self.method_missing(*args); nil; end; end
+require 'test/support/fake_logger'
 
 describe DigitalOceanCaller do
   before do
-    @caller = DigitalOceanCaller.new(Logger)
+    @caller = DigitalOceanCaller.new(FakeLogger)
   end
 
   describe '#snapshot_by_tag' do
