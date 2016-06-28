@@ -1,5 +1,7 @@
 require_relative './test_helper'
+
 require 'test/support/fake_logger'
+require 'lib/digital_ocean_caller'
 
 describe DigitalOceanCaller do
   before do
