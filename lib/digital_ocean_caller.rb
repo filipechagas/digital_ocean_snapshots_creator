@@ -71,7 +71,7 @@ class DigitalOceanCaller
   def power_droplet_on_or_off(droplet_id, on_or_off)
     url = BASE_URL + "droplets/#{ droplet_id }/actions"
     params = {'type' => "power_#{ on_or_off }"}
-    post(url, params)
+    post(url, params).fetch('action')
   end
 
   def power_on_or_off_by_tag(tag_name, on_or_off)

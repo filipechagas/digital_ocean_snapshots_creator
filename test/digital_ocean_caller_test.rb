@@ -8,6 +8,33 @@ describe DigitalOceanCaller do
     @caller = DigitalOceanCaller.new(FakeLogger)
   end
 
+  let(:action_id){ 100 }
+  let(:action_details){{
+    "action"=> {
+      "id"=> 36804636,
+      "status"=> "completed",
+      "type"=> "create",
+      "started_at"=> "2014-11-14T16=>29=>21Z",
+      "completed_at"=> "2014-11-14T16=>30=>06Z",
+      "resource_id"=> 3164444,
+      "resource_type"=> "droplet",
+      "region"=> "nyc3",
+      "region_slug"=> "nyc3"
+    }
+  }}
+
+
+  describe '#snapshot' do
+    it 'returns action details' do
+      droplet_id = 100
+      stub_request(:post, "https://api.digitalocean.com/v2/droplets/#{ droplet_id }/actions").
+        to_return(:status => 200, :body => JSON.dump(action_details), :headers => {})
+
+
+      @caller.snapshot(droplet_id).must_equal ( action_details['action'] )
+    end
+  end
+
   describe '#snapshot_by_tag' do
     it 'returns an empty hash' do
       stub_request(:post, "https://api.digitalocean.com/v2/droplets/actions?tag_name=TAG").
@@ -28,7 +55,6 @@ describe DigitalOceanCaller do
         }
       }
 
-
       stub_request(:get, "https://api.digitalocean.com/v2/droplets/101010").
         to_return(:status => 200, :body => JSON.dump( droplet_details ), :headers => {})
 
@@ -37,27 +63,27 @@ describe DigitalOceanCaller do
   end
 
   describe '#power_droplet_on' do
-    it 'returns an empty hash' do
+    it 'returns action details' do
       droplet_id = 100
 
       stub_request(:post, "https://api.digitalocean.com/v2/droplets/#{droplet_id}/actions").
         with(:body => "{\"type\":\"power_on\"}").
-        to_return(:status => 200, :body => "", :headers => {})
+        to_return(:status => 200, :body => JSON.dump(action_details), :headers => {})
 
 
-      @caller.power_droplet_on(droplet_id).must_equal ( {} )
+      @caller.power_droplet_on(droplet_id).must_equal ( action_details['action'] )
     end
   end
 
   describe '#power_droplet_off' do
-    it 'returns an empty hash' do
+    it 'returns action details' do
       droplet_id = 100
 
       stub_request(:post, "https://api.digitalocean.com/v2/droplets/#{droplet_id}/actions").
         with(:body => "{\"type\":\"power_off\"}").
-        to_return(:status => 200, :body => "", :headers => {})
+        to_return(:status => 200, :body => JSON.dump(action_details), :headers => {})
 
-      @caller.power_droplet_off(droplet_id).must_equal ( {} )
+      @caller.power_droplet_off(droplet_id).must_equal ( action_details['action'] )
     end
   end
 
@@ -117,27 +143,11 @@ describe DigitalOceanCaller do
 
   describe '#action_details' do
     it 'returns hash with action details' do
-      action_id = 100
-      action_details = {
-        "action"=> {
-          "id"=> 36804636,
-          "status"=> "completed",
-          "type"=> "create",
-          "started_at"=> "2014-11-14T16=>29=>21Z",
-          "completed_at"=> "2014-11-14T16=>30=>06Z",
-          "resource_id"=> 3164444,
-          "resource_type"=> "droplet",
-          "region"=> "nyc3",
-          "region_slug"=> "nyc3"
-        }
-      }
-
-
       stub_request(:get, "https://api.digitalocean.com/v2/actions/#{ action_id }").
         to_return(:status => 200, :body => JSON.dump(action_details), :headers => {})
 
 
-      @caller.action_details(action_id).must_equal ( action_details['action'] )
+        @caller.action_details(action_id).must_equal ( action_details['action'] )
     end
   end
 
