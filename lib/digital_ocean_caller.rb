@@ -9,6 +9,15 @@ class DigitalOceanCaller
     @logger = logger
   end
 
+  def snapshot(droplet_id)
+    url = BASE_URL + "droplets/#{ droplet_id }/actions"
+    params = {
+      "type" => "snapshot",
+      "name" => DateTime.now.strftime("%Y%m%d-%T Snapshot")
+    }
+    post(url, params).fetch('action')
+  end
+
   def snapshot_by_tag(tag_name)
     url = BASE_URL + "droplets/actions?tag_name=#{ tag_name }"
     params = {
